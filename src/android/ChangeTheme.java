@@ -1,6 +1,5 @@
 package br.com.mormani.cordova;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 
@@ -11,7 +10,6 @@ import org.apache.cordova.CallbackContext;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ChangeTheme extends CordovaPlugin {
     private static final String SET_DARK_THEME = "setDarkTheme";
@@ -32,7 +30,7 @@ public class ChangeTheme extends CordovaPlugin {
         return true;
     }
 
-    private void setDarkTheme(boolean enable, CallbackContext callback) throws JSONException {
+    private void setDarkTheme(boolean enable, CallbackContext callback) {
         ChangeTheme plugin = this;
 
         cordova.getActivity().runOnUiThread(new Runnable() {

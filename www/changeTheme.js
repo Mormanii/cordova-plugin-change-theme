@@ -31,54 +31,66 @@ ChangeTheme.prototype.isEnabled = function(theme) {
 
 /** Activates forced Dark Theme on WebView.
  *
- *  The media query `prefers-color-scheme` on
- *  **CSS** will be setted to `dark`.
+ *  The media query `prefers-color-scheme` on **CSS** will be setted to `dark`.
  *
- * @returns {Void}
+ * @returns {Promise} Promise resolved when changed theme.
  */
 ChangeTheme.prototype.enableDark = function() {
   if (this.isEnabled(ThemeType.DARK)) {
-    return;
+    // If Dark theme is already enabled, return immediately the current theme.
+    return new Promise((resolve) => {
+      resolve(this.currentTheme);
+    });
   }
 
-  const success = () => {
-    this.currentTheme = ThemeType.DARK;
-  };
-
-  const error = (error) => {
-    console.error("Error enabling Dark Theme: ", error);
-  };
-
-  exec(success, error, SERVICE_NAME, "setDarkTheme", [true]);
+  return new Promise((resolve, reject) => {
+    exec(
+      () => {
+        this.currentTheme = ThemeType.DARK;
+        resolve(this.currentTheme);
+      },
+      (error) => {
+        console.error("Error enabling Dark Theme: ", error);
+        reject(error);
+      },
+      SERVICE_NAME, "setDarkTheme", [true]
+    );
+  })
 };
 
 /** Deactivates forced Dark Theme on WebView.
  *
- *  The media query `prefers-color-scheme` on
- *  **CSS** will be setted to `light`.
+ *  The media query `prefers-color-scheme` on **CSS** will be setted to `light`.
  *
- * @returns {Void}
+ * @returns {Promise} Promise resolved when changed theme.
  */
 ChangeTheme.prototype.disableDark = function() {
   if (this.isEnabled(ThemeType.LIGHT)) {
-    return;
+    // If Light theme is already enabled, return immediately the current theme.
+    return new Promise((resolve) => {
+      resolve(this.currentTheme);
+    });
   }
 
-  const success = () => {
-    this.currentTheme = ThemeType.LIGHT;
-  };
-
-  const error = (error) => {
-    console.error("Error disabling Dark Theme: ", error);
-  };
-
-  exec(success, error, SERVICE_NAME, "setDarkTheme", [false]);
+  return new Promise((resolve, reject) => {
+    exec(
+      () => {
+        this.currentTheme = ThemeType.LIGHT;
+        resolve(this.currentTheme);
+      },
+      (error) => {
+        console.error("Error disabling Dark Theme: ", error);
+        reject(error);
+      },
+      SERVICE_NAME, "setDarkTheme", [false]
+    );
+  });
 };
 
 /** Activates or deactivates forced Dark Theme depending on `enable` value.
  *
  * @param {Boolean} enable The status of Dark Theme.
- * @returns {Void}
+ * @returns {Promise} Promise resolved when changed theme.
  */
 ChangeTheme.prototype.setDark = function(enable) {
   const paramType = utils.typeName(enable);
@@ -88,9 +100,10 @@ ChangeTheme.prototype.setDark = function(enable) {
   }
 
   if (enable) {
-    this.enableDark();
+    // Returning the Promise created.
+    return this.enableDark();
   } else {
-    this.disableDark();
+    return this.disableDark();
   }
 };
 
