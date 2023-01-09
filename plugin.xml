@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-change-theme" version="0.1.0">
+
+    <name>ChangeTheme</name>
+    <description>Change WebView Theme between Dark and Light Mode on Android</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,android,dark,light,mode,theme</keywords>
+    <author>Mormani</author>
+    <repo></repo>
+    <issue></issue>
+
+    <engines>
+        <engine name="cordova-android" version=">=10" />
+        <engine name="android-sdk" version=">=29" />
+    </engines>
+
+    <!-- android -->
+    <platform name="android">
+        <js-module src="www/changeTheme.js" name="changeTheme">
+            <clobbers target="cordova.plugins.changeTheme" />
+        </js-module>
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="ChangeTheme" >
+                <param name="android-package" value="br.com.mormani.cordova.ChangeTheme"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/ChangeTheme.java" target-dir="src/br/com/mormani/cordova/changeTheme" />
+    </platform>
+
+
+</plugin>
