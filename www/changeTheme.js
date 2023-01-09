@@ -2,51 +2,47 @@ const SERVICE_NAME = "ChangeTheme";
 
 const exec = require("cordova/exec");
 const utils = require("cordova/utils");
-const channel = require("cordova/channel");
 
-
-function ChangeTheme() {
-  this.currentTheme = {
-    name: undefined,
-    code: undefined
-  };
-
-  channel.onCordovaInfoReady.subscribe(() => {
-    const success = (theme) => {
-      this.currentTheme = theme;
-      channel.onCordovaInfoReady.fire();
-    };
-
-    const error = (error) => {
-      console.error("Error initializing cordova-plugin-change-theme: ", error);
-    };
-
-    exec(success, error, SERVICE_NAME, "initialTheme", []);
-  });
-}
-
-ChangeTheme.prototype.isEnabled = function(theme) {
-  return theme === this.currentTheme.name;
+const ThemeType = {
+  DARK: "Dark",
+  LIGHT: "Light"
 };
 
-utils.defineGetterSetter(ChangeTheme, "currentTheme",
-  function() {
-    return this.currentTheme;
-  },
-  function(newValue) {
-    this.currentTheme.name = newValue.name;
-    this.currentTheme.code = newValue.code;
-  }
-);
+function ChangeTheme() {
+  // Checking which theme is initial applied on WebView.
+  this.currentTheme = "";
 
-// Dark Theme Controllers.
+  if (matchMedia("(prefers-color-scheme: light)").matches) {
+    this.currentTheme = ThemeType.LIGHT;
+  } else {
+    this.currentTheme = ThemeType.DARK;
+  }
+}
+
+/** Checks if the `theme` is enabled or disabled.
+ *  Possible values for `theme` are defined in `ThemeType`.
+ *
+ * @param {String} theme Name of theme that will be check.
+ * @returns {Boolean} Result of check.
+ */
+ChangeTheme.prototype.isEnabled = function(theme) {
+  return theme === this.currentTheme;
+};
+
+/** Activates forced Dark Theme on WebView.
+ *
+ *  The media query `prefers-color-scheme` on
+ *  **CSS** will be setted to `dark`.
+ *
+ * @returns {Void}
+ */
 ChangeTheme.prototype.enableDark = function() {
-  if (this.isEnabled("Dark")) {
+  if (this.isEnabled(ThemeType.DARK)) {
     return;
   }
 
-  const success = (theme) => {
-    this.currentTheme = theme;
+  const success = () => {
+    this.currentTheme = ThemeType.DARK;
   };
 
   const error = (error) => {
@@ -56,13 +52,20 @@ ChangeTheme.prototype.enableDark = function() {
   exec(success, error, SERVICE_NAME, "setDarkTheme", [true]);
 };
 
+/** Deactivates forced Dark Theme on WebView.
+ *
+ *  The media query `prefers-color-scheme` on
+ *  **CSS** will be setted to `light`.
+ *
+ * @returns {Void}
+ */
 ChangeTheme.prototype.disableDark = function() {
-  if (!this.isEnabled("Dark")) {
+  if (this.isEnabled(ThemeType.LIGHT)) {
     return;
   }
 
-  const success = (theme) => {
-    this.currentTheme = theme;
+  const success = () => {
+    this.currentTheme = ThemeType.LIGHT;
   };
 
   const error = (error) => {
@@ -72,6 +75,11 @@ ChangeTheme.prototype.disableDark = function() {
   exec(success, error, SERVICE_NAME, "setDarkTheme", [false]);
 };
 
+/** Activates or deactivates forced Dark Theme depending on `enable` value.
+ *
+ * @param {Boolean} enable The status of Dark Theme.
+ * @returns {Void}
+ */
 ChangeTheme.prototype.setDark = function(enable) {
   const paramType = utils.typeName(enable);
 
@@ -83,53 +91,6 @@ ChangeTheme.prototype.setDark = function(enable) {
     this.enableDark();
   } else {
     this.disableDark();
-  }
-};
-
-// Light Theme Controllers.
-ChangeTheme.prototype.enableLight = function() {
-  if (this.isEnabled("Light")) {
-    return;
-  }
-
-  const success = (theme) => {
-    this.currentTheme = theme;
-  };
-
-  const error = (error) => {
-    console.error("Error enabling Light Theme: ", error);
-  };
-
-  exec(success, error, SERVICE_NAME, "setLightTheme", [true]);
-};
-
-ChangeTheme.prototype.disableLight = function() {
-  if (!this.isEnabled("Light")) {
-    return;
-  }
-
-  const success = (theme) => {
-    this.currentTheme = theme;
-  };
-
-  const error = (error) => {
-    console.error("Error disabling Light Theme: ", error);
-  };
-
-  exec(success, error, SERVICE_NAME, "setLightTheme", [false]);
-};
-
-ChangeTheme.prototype.setLight = function(enable) {
-  const paramType = utils.typeName(enable);
-
-  if (paramType !== "Boolean") {
-    throw new TypeError("Expected Boolean parameter but got " + paramType + " on setLight");
-  }
-
-  if (enable) {
-    this.enableLight();
-  } else {
-    this.disableLight();
   }
 };
 
