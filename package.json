@@ -1,7 +1,9 @@
 {
   "name": "cordova-plugin-change-theme",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Change WebView Theme between Dark and Light Mode on Android",
+  "repository": "https://github.com/Mormanii/cordova-plugin-change-theme/",
+  "bugs": "https://github.com/Mormanii/cordova-plugin-change-theme/issues/",
   "cordova": {
     "id": "cordova-plugin-change-theme",
     "platforms": [
