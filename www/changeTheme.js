@@ -49,10 +49,7 @@ ChangeTheme.prototype.enableDark = function() {
         this.currentTheme = ThemeType.DARK;
         resolve(this.currentTheme);
       },
-      (error) => {
-        console.error("Error enabling Dark Theme: ", error);
-        reject(error);
-      },
+      reject,
       SERVICE_NAME, "setDarkTheme", [true]
     );
   })
@@ -78,10 +75,7 @@ ChangeTheme.prototype.disableDark = function() {
         this.currentTheme = ThemeType.LIGHT;
         resolve(this.currentTheme);
       },
-      (error) => {
-        console.error("Error disabling Dark Theme: ", error);
-        reject(error);
-      },
+      reject,
       SERVICE_NAME, "setDarkTheme", [false]
     );
   });
