@@ -36,6 +36,14 @@ After that the value is saved on the following property and possible values are 
 changeTheme.currentTheme;
 ```
 
+### Check if the theme is enabled
+Once the plugin has been initialized, you can check which theme is being used with the following method:
+```js
+changeTheme.isEnabled("Dark");  // => boolean
+// OR
+changeTheme.isEnabled("Light");
+```
+
 ### Control Dark Theme
 It is possible to change theme with the following methods and a `Promise` will be returned.
 
