@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
-    id="cordova-plugin-change-theme" version="1.0.0">
+    id="cordova-plugin-change-theme" version="1.0.1">
 
     <name>ChangeTheme</name>
     <description>Change WebView Theme between Dark and Light Mode on Android</description>
